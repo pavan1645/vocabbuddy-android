@@ -9,7 +9,7 @@ import kotlinx.android.synthetic.main.activity_practice_section_list.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class SectionList : AppCompatActivity() {
+class PracticeSectionList : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,7 +23,7 @@ class SectionList : AppCompatActivity() {
 
         GlobalScope.launch {
             val sections = db.SectionDao().getAllSections();
-            val viewAdapter = SectionListAdapter(sections, context)
+            val viewAdapter = PracticeSectionListAdapter(sections, context)
             runOnUiThread {
                 section_list.adapter = viewAdapter
             }
