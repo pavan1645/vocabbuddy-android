@@ -1,4 +1,4 @@
-package com.example.vocabbuddy
+package com.example.vocabbuddy.Models
 
 import androidx.room.*
 

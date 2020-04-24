@@ -1,8 +1,8 @@
-package com.example.vocabbuddy
+package com.example.vocabbuddy.Dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Query
+import com.example.vocabbuddy.Models.Section
 
 @Dao
 interface SectionDao {

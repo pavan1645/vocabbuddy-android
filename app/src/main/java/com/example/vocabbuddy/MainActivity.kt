@@ -1,14 +1,11 @@
 package com.example.vocabbuddy
 
 import android.content.Intent
-import android.database.sqlite.SQLiteDatabase
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.room.Room
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_section_list.*
+import com.example.vocabbuddy.Practice.SectionList
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
