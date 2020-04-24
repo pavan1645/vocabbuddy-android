@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.graphics.alpha
 import androidx.recyclerview.widget.RecyclerView
 import com.example.vocabbuddy.Models.Section
 import com.example.vocabbuddy.R
@@ -29,8 +28,10 @@ class SectionListAdapter(private val sections: List<Section>, private val contex
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val section = sections[position];
+        if (section.progress_status == 2) holder.itemView.custom_overlay.visibility = View.GONE;
         holder.itemView.section_name.text = section.name;
         holder.itemView.section_locked.text = "${section.name} Locked";
+        holder.itemView.best_score.text = "${section.best_score}/20"
         holder.itemView.section_learn.text = "Learn ${section.name}"
         holder.itemView.section_name.setOnClickListener {
             Toast.makeText(context, sections[position].name, Toast.LENGTH_SHORT).show()
