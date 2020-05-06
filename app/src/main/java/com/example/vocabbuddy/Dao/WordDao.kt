@@ -12,7 +12,7 @@ interface WordDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertWord(word: Word)
 
-    @Query("SELECT * FROM words")
-    suspend fun getAllWords(): List<Word>
+    @Query("SELECT * FROM words WHERE sect_id=:sectId")
+    suspend fun getAllWords(sectId: Int): List<Word>
 
 }
