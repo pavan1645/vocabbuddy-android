@@ -2,6 +2,7 @@ package com.example.vocabbuddy.Practice
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,6 +35,7 @@ class PracticeSectionListAdapter(private val sections: List<Section>, private va
         holder.itemView.section_locked.text = "${section.name} Locked";
         holder.itemView.best_score.text = "${section.best_score}/20"
         holder.itemView.section_learn.text = "Learn ${section.name}"
+        holder.itemView.custom_overlay.visibility = View.VISIBLE;
 
         if (section.progress_status == 2) {
             holder.itemView.custom_overlay.visibility = View.GONE;

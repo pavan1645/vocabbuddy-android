@@ -122,13 +122,21 @@
         android:layout_marginBottom="16dp"/>
 
     <TextView
-        android:id="@+id/total_score"
+        android:id="@+id/current_score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Score: 0"
+        android:layout_marginEnd="8dp"
+        android:text="Current Score: 0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/best_score" />
+
+    <TextView
+        android:id="@+id/best_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Best Score: 0"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"/>
+        android:layout_margin="8dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

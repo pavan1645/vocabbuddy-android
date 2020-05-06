@@ -16,24 +16,27 @@ import kotlin.random.Random
 
 class PracticeSection : AppCompatActivity() {
 
-//    TODO: Add score to DB
-
     private var allWords: List<Word> = ArrayList();
     private var remainingWords: MutableList<Word> = ArrayList();
     private var answerIndex: Int = -1;
-    private var score: Int = 0;
+    private var bestScore: Int = 0;
+    private var currScore: Int = 0;
+    private lateinit var db: VocabDb;
+    private var sectionId: Int = 0;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_practice_section)
 
-        val sectionId = intent.extras?.getInt("id") ?: 0;
-
-        val db = VocabDb(this);
+        sectionId = intent.extras?.getInt("id") ?: 0;
+        db = VocabDb(this);
 
         GlobalScope.launch {
             allWords = db.WordDao().getAllWords(sectionId)
+            val section = db.SectionDao().getSectionById(sectionId)
             remainingWords.addAll(allWords);
+            bestScore = section.best_score ?: 0;
+            best_score.text = "Best Score: ${bestScore}";
             generateNewCard()
         }
 
@@ -41,7 +44,7 @@ class PracticeSection : AppCompatActivity() {
     }
 
     private fun generateNewCard() {
-        if (remainingWords.size == 0) return Toast.makeText(this, "Total Score ${score}", Toast.LENGTH_SHORT).show()
+        if (remainingWords.size == 0) return Toast.makeText(this, "Total Score ${currScore}", Toast.LENGTH_SHORT).show()
 
         val questionWord: Word = remainingWords[Random.nextInt(0, remainingWords.size)];
         answerIndex = Random.nextInt(0, 4);
@@ -82,8 +85,15 @@ class PracticeSection : AppCompatActivity() {
         if (v.tag.toString().equals(answerIndex.toString())) {
             v.setBackgroundColor(successBg)
             v.buttonTintList = ColorStateList.valueOf(successBg)
-            score++;
-            total_score.text = "Score: ${score}"
+            currScore++;
+            current_score.text = "Current Score: ${currScore}"
+
+            if (currScore > bestScore) {
+                GlobalScope.launch { db.SectionDao().setSectionScore(sectionId, currScore) }
+                bestScore = currScore;
+                best_score.text = "Best Score: ${bestScore}";
+            }
+
         } else {
             val correctOptionRadio = answerRadioGroup.getChildAt(answerIndex) as RadioButton
             correctOptionRadio.setBackgroundColor(successBg)
