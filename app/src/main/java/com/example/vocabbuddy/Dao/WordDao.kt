@@ -15,4 +15,7 @@ interface WordDao {
     @Query("SELECT * FROM words WHERE sect_id=:sectId")
     suspend fun getAllWords(sectId: Int): List<Word>
 
+    @Query("UPDATE words SET learning_status= :status WHERE id = :id")
+    fun setLearningStatus(id: Int, status: Int)
+
 }

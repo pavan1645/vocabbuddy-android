@@ -36,7 +36,7 @@ android {
     }
     sourceSets {
         main {
-            res.srcDirs = ['src/main/res', 'src/main/res/layout/practice', 'src/main/res/layout/shapes']
+            res.srcDirs = ['src/main/res', 'src/main/res/layout/practice', 'src/main/res/layout/shapes', 'src/main/res/layout/learn']
         }
     }
 }

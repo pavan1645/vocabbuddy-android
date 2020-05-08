@@ -77,8 +77,8 @@ class PracticeSection : AppCompatActivity() {
     }
 
     fun optionSelected(v: View) {
-        val successBg = resources.getColor(R.color.colorSuccessBg, null);
-        val dangerBg = resources.getColor(R.color.colorDangerBg, null);
+        val successBg = resources.getColor(R.color.SuccessBg, null);
+        val dangerBg = resources.getColor(R.color.DangerBg, null);
 
         v as RadioButton;
 
@@ -110,8 +110,8 @@ class PracticeSection : AppCompatActivity() {
             radioButton as RadioButton;
             radioButton.isClickable = isClickable;
             if (reset) {
-                radioButton.setBackgroundColor(resources.getColor(R.color.colorWhite, null))
-                radioButton.buttonTintList = ColorStateList.valueOf(resources.getColor(R.color.colorSecondary, null))
+                radioButton.setBackgroundColor(resources.getColor(R.color.White, null))
+                radioButton.buttonTintList = ColorStateList.valueOf(resources.getColor(R.color.SecondaryBg, null))
             }
         }
     }
