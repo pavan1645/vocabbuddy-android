@@ -2,9 +2,11 @@ package com.example.vocabbuddy.Learn
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.vocabbuddy.Models.Word
 import com.example.vocabbuddy.R
@@ -12,17 +14,20 @@ import com.example.vocabbuddy.VocabDb
 import kotlinx.android.synthetic.main.activity_learn_section.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.w3c.dom.Text
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.random.Random
 
 class LearnSection : AppCompatActivity() {
-
     private val learningWords: MutableList<Word> = ArrayList()
     private val reviewingWords: MutableList<Word> = ArrayList()
     private val masteredWords: MutableList<Word> = ArrayList()
     private lateinit var allWords: List<Word>
     private var sectionId: Int = 0
     private lateinit var questionWord: Word
-
+    private var selectFromMaster: Boolean = false;
+    private lateinit var tts: TextToSpeech;
 
     private lateinit var vocabDb: VocabDb
 
@@ -33,6 +38,13 @@ class LearnSection : AppCompatActivity() {
         vocabDb = VocabDb(this)
         sectionId = intent.extras?.getInt("id") ?: 0
         getWords()
+
+        tts = TextToSpeech(applicationContext, TextToSpeech.OnInitListener { status ->
+            if (status != TextToSpeech.ERROR) {
+                tts.language = Locale.US
+                tts.setSpeechRate(0.75f)
+            }
+        })
     }
 
     private fun getWords() {
@@ -59,13 +71,35 @@ class LearnSection : AppCompatActivity() {
     }
 
     private fun generateWordCard() {
-        val currWordIndex = Random.nextInt(0, learningWords.size + reviewingWords.size)
-        if (currWordIndex < learningWords.size) questionWord = learningWords[currWordIndex]
-        else questionWord = reviewingWords[currWordIndex - learningWords.size]
+
+        if (learningWords.size + reviewingWords.size == 1) {
+            selectFromMaster = !selectFromMaster;
+            if (selectFromMaster) questionWord = masteredWords[Random.nextInt(0, masteredWords.size)]
+        }
+
+        if (learningWords.size + reviewingWords.size > 1 || !selectFromMaster) {
+            val currWordIndex = Random.nextInt(0, learningWords.size + reviewingWords.size)
+            if (currWordIndex < learningWords.size) questionWord = learningWords[currWordIndex]
+            else questionWord = reviewingWords[currWordIndex - learningWords.size]
+        }
 
         word_text.text = questionWord.word
         definition.text = questionWord.definition
-        type_phonetic.text = "${questionWord.type} ${questionWord.phonetic}"
+        type_phonetic.text = "${questionWord.type} ● ${questionWord.phonetic}"
+        definition.text = questionWord.definition
+
+        /* Overlay layout's values */
+        word_text_2.text = questionWord.word
+        definition_2.text = questionWord.definition
+        type_phonetic_2.text = "${questionWord.type} ● ${questionWord.phonetic}"
+        example_text.text = questionWord.example
+        origin_text.text = questionWord.origin
+
+        GlobalScope.launch {
+            val synonyms = vocabDb.SynonymsDao().getSynonyms(questionWord.id)
+            runOnUiThread { synonyms_text.text = synonyms.toString().replace("[", "").replace("]", "") }
+        }
+
         resetCard()
     }
 
@@ -91,6 +125,7 @@ class LearnSection : AppCompatActivity() {
         definition.visibility = View.GONE
         show_def_text.visibility = View.VISIBLE
         button_container.visibility = View.GONE
+        overlay.visibility = View.GONE
     }
 
 
@@ -118,6 +153,18 @@ class LearnSection : AppCompatActivity() {
         button_container.visibility = View.VISIBLE
     }
 
+    fun openOverlay(v: View) {
+        overlay.visibility = View.VISIBLE
+    }
+
+    fun closeOverlay(v: View) {
+        overlay.visibility = View.GONE
+    }
+
+    fun onSpeakBtnClick(v: View) {
+        tts.speak(questionWord.word, TextToSpeech.QUEUE_FLUSH, null, "")
+    }
+
     fun wordRemembered(v: View) {
         val status = questionWord.learning_status ?: 0
         val newStatus = if ((status + 1) > 3) 3 else (status + 1)
@@ -135,7 +182,6 @@ class LearnSection : AppCompatActivity() {
             getWords()
         }
     }
-
 
     private fun setProgressBarValues() {
         master_count.text = "${masteredWords.size} out of ${allWords.size}"

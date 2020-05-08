@@ -7,11 +7,13 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.vocabbuddy.Dao.SectionDao
+import com.example.vocabbuddy.Dao.SynonymsDao
 import com.example.vocabbuddy.Dao.WordDao
 import com.example.vocabbuddy.Models.Section
+import com.example.vocabbuddy.Models.Synonyms
 import com.example.vocabbuddy.Models.Word
 
-val MIGRATION_1_2 = object : Migration(1, 2) {
+val MIGRATION_1_2 = object : Migration(2, 3) {
     override fun migrate(database: SupportSQLiteDatabase) {
 //        database.execSQL("CREATE TABLE IF NOT EXISTS sections (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `best_score` INTEGER NOT NULL, `progress_status` INTEGER NOT NULL, PRIMARY KEY(`id`))")
     }
@@ -19,13 +21,14 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
 
 
 @Database (
-    entities = [Word::class, Section::class],
-    version = 2
+    entities = [Word::class, Section::class, Synonyms::class],
+    version = 3
 )
 
 abstract class VocabDb : RoomDatabase() {
     abstract fun WordDao() : WordDao
     abstract fun SectionDao() : SectionDao
+    abstract fun SynonymsDao() : SynonymsDao
     companion object {
         @Volatile private var instance: VocabDb? = null
         private val LOCK = Any()
