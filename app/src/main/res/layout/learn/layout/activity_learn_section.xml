@@ -150,8 +150,10 @@
         app:layout_constraintGuide_percent="0.85" />
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/display_card"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="@color/White"
         android:maxHeight="400dp"
         android:minHeight="200dp"
         android:onClick="onCardClick"
@@ -283,7 +285,7 @@
         android:layout_height="match_parent"
         android:background="@color/White"
         android:elevation="3dp"
-        android:visibility="visible"
+        android:visibility="gone"
         tools:layout_editor_absoluteX="62dp">
 
         <TextView
@@ -419,12 +421,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:paddingStart="16dp"
+            android:paddingEnd="16dp"
             android:text="Origin"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/definition_2"
-            app:layout_constraintTop_toBottomOf="@+id/synonyms_text"
-            android:paddingEnd="16dp" />
+            app:layout_constraintTop_toBottomOf="@+id/synonyms_text" />
 
         <TextView
             android:id="@+id/origin_text"

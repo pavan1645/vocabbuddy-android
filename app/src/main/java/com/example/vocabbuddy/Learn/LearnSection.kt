@@ -1,20 +1,19 @@
 package com.example.vocabbuddy.Learn
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
-import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
-import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.animation.doOnEnd
 import com.example.vocabbuddy.Models.Word
 import com.example.vocabbuddy.R
 import com.example.vocabbuddy.VocabDb
 import kotlinx.android.synthetic.main.activity_learn_section.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.w3c.dom.Text
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.random.Random
@@ -71,7 +70,6 @@ class LearnSection : AppCompatActivity() {
     }
 
     private fun generateWordCard() {
-
         if (learningWords.size + reviewingWords.size == 1) {
             selectFromMaster = !selectFromMaster;
             if (selectFromMaster) questionWord = masteredWords[Random.nextInt(0, masteredWords.size)]
@@ -126,8 +124,23 @@ class LearnSection : AppCompatActivity() {
         show_def_text.visibility = View.VISIBLE
         button_container.visibility = View.GONE
         overlay.visibility = View.GONE
-    }
 
+        display_card.apply {
+            translationY = 0f;
+            translationX = 0f
+            rotation = 0f
+            alpha = 1f;
+        }
+
+        val scaleXAnimation = ObjectAnimator.ofFloat(display_card, View.SCALE_X, 0.8f, 1f)
+        val scaleYAnimation = ObjectAnimator.ofFloat(display_card, View.SCALE_Y, 0.8f, 1f)
+        val animatorSet = AnimatorSet()
+        animatorSet.apply {
+            play(scaleXAnimation).with(scaleYAnimation)
+            duration = 200;
+            start()
+        }
+    }
 
     fun onCardClick(v: View) {
         full_screen_btn.visibility = View.VISIBLE
@@ -170,7 +183,7 @@ class LearnSection : AppCompatActivity() {
         val newStatus = if ((status + 1) > 3) 3 else (status + 1)
         GlobalScope.launch {
             vocabDb.WordDao().setLearningStatus(questionWord.id, newStatus)
-            getWords()
+            swipeCard("right");
         }
     }
 
@@ -179,7 +192,30 @@ class LearnSection : AppCompatActivity() {
         val newStatus = if ((status - 1) < 0) 0 else (status - 1)
         GlobalScope.launch {
             vocabDb.WordDao().setLearningStatus(questionWord.id, newStatus)
-            getWords()
+            swipeCard("left");
+        }
+    }
+
+    private fun swipeCard(direction: String) {
+        runOnUiThread {
+            val yLen = -resources.displayMetrics.heightPixels.toFloat();
+            var xLen = resources.displayMetrics.widthPixels.toFloat();
+            if (direction == "left") xLen *= -1;
+            var rotateDegree = 90f;
+            if (direction == "left") rotateDegree *= -1;
+
+            val yAnimation = ObjectAnimator.ofFloat(display_card, View.TRANSLATION_Y, 0f, yLen)
+            val xAnimation = ObjectAnimator.ofFloat(display_card, View.TRANSLATION_X, 0f, xLen)
+            val rotateAnimation = ObjectAnimator.ofFloat(display_card, View.ROTATION, 0f, rotateDegree)
+            val alphaAnimation = ObjectAnimator.ofFloat(display_card, View.ALPHA, 1f, 0f)
+
+            val animatorSet = AnimatorSet();
+            animatorSet.apply {
+                play(yAnimation).with(xAnimation).with(rotateAnimation).with(alphaAnimation);
+                duration = 500
+                doOnEnd { getWords() }
+                start()
+            }
         }
     }
 
