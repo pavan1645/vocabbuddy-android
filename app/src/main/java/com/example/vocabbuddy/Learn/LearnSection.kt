@@ -169,9 +169,11 @@ class LearnSection : AppCompatActivity() {
             this.requestLayout()
         }
         word_text.textSize = 22f
+        type_phonetic.alpha = 0f;
         type_phonetic.visibility = View.GONE
         definition.visibility = View.GONE
         show_def_text.visibility = View.VISIBLE
+        button_container.translationY = 100f
         button_container.visibility = View.GONE
         overlay.visibility = View.GONE
 
@@ -211,17 +213,24 @@ class LearnSection : AppCompatActivity() {
         }
         word_text.textSize = 16f
         type_phonetic.visibility = View.VISIBLE
+        type_phonetic.animate().alpha(1f)
         definition.visibility = View.VISIBLE
         show_def_text.visibility = View.GONE
         button_container.visibility = View.VISIBLE
+        button_container.animate().translationY(0f)
     }
 
     fun openOverlay(v: View) {
         overlay.visibility = View.VISIBLE
+        overlay.animate().scaleX(1f).scaleY(1f)
     }
 
     fun closeOverlay(v: View) {
-        overlay.visibility = View.GONE
+        overlay.apply {
+            visibility = View.GONE
+            scaleX = 0f
+            scaleY = 0f
+        }
     }
 
     fun onSpeakBtnClick(v: View) {

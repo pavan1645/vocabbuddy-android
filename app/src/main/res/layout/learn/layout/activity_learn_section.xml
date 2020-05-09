@@ -157,6 +157,7 @@
         android:maxHeight="400dp"
         android:minHeight="200dp"
         android:padding="8dp"
+        android:visibility="visible"
         app:cardElevation="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline7"
@@ -225,6 +226,7 @@
                 android:id="@+id/type_phonetic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:alpha="0"
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp"
                 android:textAlignment="center"
@@ -249,6 +251,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:translationY="100dp"
                 android:visibility="gone">
 
                 <Button
@@ -284,8 +287,13 @@
         android:layout_height="match_parent"
         android:background="@color/White"
         android:elevation="3dp"
+        android:scaleX="0"
+        android:scaleY="0"
         android:visibility="gone"
-        tools:layout_editor_absoluteX="62dp">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/word_text_2"
