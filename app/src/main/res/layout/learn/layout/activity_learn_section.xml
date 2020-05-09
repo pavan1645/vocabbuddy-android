@@ -156,7 +156,6 @@
         android:background="@color/White"
         android:maxHeight="400dp"
         android:minHeight="200dp"
-        android:onClick="onCardClick"
         android:padding="8dp"
         app:cardElevation="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -253,23 +252,23 @@
                 android:visibility="gone">
 
                 <Button
+                    android:id="@+id/not_remember_btn"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="1dp"
                     android:layout_weight="1"
                     android:background="@color/DangerBg"
-                    android:onClick="wordNotRemembered"
                     android:text="I didn't know this word"
                     android:textColor="@color/DangerText"
                     android:textSize="11sp" />
 
                 <Button
+                    android:id="@+id/remember_btn"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_weight="1"
                     android:background="@color/InfoBg"
-                    android:onClick="wordRemembered"
                     android:text="I know this word"
                     android:textColor="@color/InfoText"
                     android:textSize="11sp" />
