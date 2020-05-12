@@ -3,6 +3,7 @@
 <!--    <color name="Primary">#008577</color>-->
     <color name="PrimaryDark">#00574B</color>
     <color name="Accent">#D81B60</color>
+    <color name="AccentDark">#991344</color>
 
     <color name="Primary">#007bff</color>
     <color name="PrimaryBg">#cce5ff</color>
@@ -34,4 +35,6 @@
     <color name="Info">#17a2b8</color>
     <color name="InfoBg">#d1ecf1</color>
     <color name="InfoText">#0c5460</color>
+
+    <color name="Violet">#363795</color>
 </resources>

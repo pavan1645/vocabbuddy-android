@@ -8,6 +8,7 @@ import com.example.vocabbuddy.VocabDb
 import kotlinx.android.synthetic.main.activity_learn_section_list.*
 import kotlinx.android.synthetic.main.activity_practice_section_list.*
 import kotlinx.android.synthetic.main.activity_practice_section_list.section_list
+import kotlinx.android.synthetic.main.learn_section_list_item.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -21,6 +22,7 @@ class LearnSectionList : AppCompatActivity() {
         section_list.layoutManager = viewManager
         loadWords()
 
+        window.statusBarColor = resources.getColor(R.color.SuccessText, null);
     }
 
     private fun loadWords() {

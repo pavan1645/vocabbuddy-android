@@ -36,6 +36,7 @@ class LearnSection : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_learn_section)
+        window.statusBarColor = resources.getColor(R.color.SuccessText, null);
 
         vocabDb = VocabDb(this)
         sectionId = intent.extras?.getInt("id") ?: 0

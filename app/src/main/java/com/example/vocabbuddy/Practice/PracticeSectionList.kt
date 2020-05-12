@@ -14,6 +14,7 @@ class PracticeSectionList : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_practice_section_list)
+        window.statusBarColor = resources.getColor(R.color.AccentDark, null);
 
         val viewManager = LinearLayoutManager(this)
         section_list.layoutManager = viewManager

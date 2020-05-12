@@ -1,11 +1,20 @@
 package com.example.vocabbuddy.Practice
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.content.res.ColorStateList
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.ScaleAnimation
+import android.view.animation.TranslateAnimation
+import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.Toast
+import androidx.core.animation.doOnEnd
 import com.example.vocabbuddy.Models.Word
 import com.example.vocabbuddy.R
 import com.example.vocabbuddy.VocabDb
@@ -27,6 +36,7 @@ class PracticeSection : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_practice_section)
+        window.statusBarColor = resources.getColor(R.color.AccentDark, null);
 
         sectionId = intent.extras?.getInt("id") ?: 0;
         db = VocabDb(this);
@@ -39,12 +49,16 @@ class PracticeSection : AppCompatActivity() {
             best_score.text = "Best Score: ${bestScore}";
             generateNewCard()
         }
-
-        next.setOnClickListener { generateNewCard() }
+        next.setOnClickListener {
+            animateNextButton(false)
+            animateNextCard()
+        }
     }
 
     private fun generateNewCard() {
-        if (remainingWords.size == 0) return Toast.makeText(this, "Total Score ${currScore}", Toast.LENGTH_SHORT).show()
+        if (remainingWords.size == 0) {
+            return
+        }
 
         val questionWord: Word = remainingWords[Random.nextInt(0, remainingWords.size)];
         answerIndex = Random.nextInt(0, 4);
@@ -101,6 +115,52 @@ class PracticeSection : AppCompatActivity() {
             v.buttonTintList = ColorStateList.valueOf(dangerBg)
         }
         toogleRadioGroup(false, false)
+        animateNextButton(true)
+    }
+
+    private fun animateNextCard() {
+        var xLen = resources.displayMetrics.widthPixels.toFloat() * -1;
+        val currX = card_wrapper.translationX;
+
+        val scaleDownXAnimation = ObjectAnimator.ofFloat(card_wrapper, View.SCALE_X, 0.9f)
+        val scaleDownYAnimation = ObjectAnimator.ofFloat(card_wrapper, View.SCALE_Y, 0.9f)
+        val moveOutAnimation = ObjectAnimator.ofFloat(card_wrapper, View.TRANSLATION_X, xLen)
+
+        val moveInAnimation = ObjectAnimator.ofFloat(card_wrapper, View.TRANSLATION_X, xLen*-1, currX)
+        val scaleInXAnimation = ObjectAnimator.ofFloat(card_wrapper, View.SCALE_X, 1f)
+        val scaleInYAnimation = ObjectAnimator.ofFloat(card_wrapper, View.SCALE_Y, 1f)
+
+        val moveOutAnimatorSet = AnimatorSet();
+        val moveInAnimatorSet = AnimatorSet();
+
+        val animationDuration = 250L;
+
+        moveInAnimatorSet.apply {
+            play(scaleInXAnimation).with(scaleInYAnimation).after(moveInAnimation)
+            duration = animationDuration
+        }
+
+        moveOutAnimatorSet.apply {
+            play(scaleDownXAnimation).with(scaleDownYAnimation).before(moveOutAnimation )
+            duration = animationDuration
+            doOnEnd {
+                moveInAnimatorSet.start()
+                generateNewCard()
+            }
+            start()
+        }
+
+    }
+
+    private fun animateNextButton(show: Boolean) {
+        val start = if (show) 0f else 1f;
+        val end = if (show) 1f else 0f;
+
+        val scaleAnimation = ScaleAnimation(start, end, start, end, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        scaleAnimation.fillAfter = true
+        scaleAnimation.duration = 300
+        next.visibility = View.VISIBLE
+        next.startAnimation(scaleAnimation);
     }
 
     private fun toogleRadioGroup(isClickable: Boolean, reset: Boolean) {

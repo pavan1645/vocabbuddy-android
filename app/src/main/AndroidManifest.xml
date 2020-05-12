@@ -10,10 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/MyTheme">
         <activity android:name=".Learn.LearnSectionList" />
-        <activity android:name=".Learn.LearnSection" />
-        <activity android:name=".Practice.PracticeSection" />
+        <activity android:name=".Learn.LearnSection"/>
+        <activity android:name=".Practice.PracticeSection"/>
         <activity android:name=".Practice.PracticeSectionList" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

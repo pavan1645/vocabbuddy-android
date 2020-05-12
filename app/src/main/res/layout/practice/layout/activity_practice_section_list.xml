@@ -7,6 +7,15 @@
     android:orientation="vertical">
 
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/Accent"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:title="Practice" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/section_list"
         android:layout_width="match_parent"
