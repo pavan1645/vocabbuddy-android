@@ -544,9 +544,28 @@
         android:layout_height="wrap_content"
         android:gravity="right"
         android:orientation="horizontal"
+        android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:padding="8dp"
+            app:srcCompat="@drawable/ic_arrow_back_white_24dp" />
+
+        <TextView
+            android:id="@+id/activity_title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:text="Learn Section 1"
+            android:textColor="@color/White"
+            android:textSize="18sp" />
 
         <ImageButton
             android:id="@+id/help_btn"
@@ -555,5 +574,6 @@
             android:background="@android:color/transparent"
             android:padding="8dp"
             app:srcCompat="@drawable/ic_help_outline_white_24dp" />
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

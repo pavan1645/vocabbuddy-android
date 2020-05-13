@@ -61,8 +61,10 @@ class LearnSection : AppCompatActivity() {
 
         remember_btn.setOnClickListener { wordRemembered() }
         not_remember_btn.setOnClickListener { wordNotRemembered() }
+        back_btn.setOnClickListener { finish() }
         help_btn.setOnClickListener {
             onBoardingPhase = 0;
+            sharedPreferences.edit().putBoolean("ONBOARDING_COMPLETE", false).apply()
             onBoardUser()
         }
         setTouchListener()
@@ -79,7 +81,6 @@ class LearnSection : AppCompatActivity() {
             allWords = vocabDb.WordDao().getAllWords(sectionId)
             section = vocabDb.SectionDao().getSectionById(sectionId)
 
-
             learningWords.clear()
             reviewingWords.clear()
             masteredWords.clear()
@@ -94,6 +95,7 @@ class LearnSection : AppCompatActivity() {
             runOnUiThread {
                 setProgressBarValues()
                 generateWordCard()
+                activity_title.text = "Learn ${section.name}"
             }
         }
     }
@@ -294,9 +296,10 @@ class LearnSection : AppCompatActivity() {
 
     private fun onBoardUser() {
         val onboardingTexts = listOf("Tap the card to reveal the word's meaning", "Tap the fullscreen icon to show more information about the word", "Swipe left if you didn't know the meaning of the word \nSwipe right if you know the meaning of the word")
-        if (onBoardingPhase > 2) {
+        val sharedPreferences = getSharedPreferences("GLOBAL_PREF", Context.MODE_PRIVATE)
+
+        if (onBoardingPhase > 2 || sharedPreferences.getBoolean("ONBOARDING_COMPLETE", false)) {
             onboarding_text.text = "";
-            val sharedPreferences = getSharedPreferences("GLOBAL_PREF", Context.MODE_PRIVATE)
             sharedPreferences.edit().putBoolean("ONBOARDING_COMPLETE", true).apply()
             return
         }

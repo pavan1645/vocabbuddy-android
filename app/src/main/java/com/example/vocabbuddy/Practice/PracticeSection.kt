@@ -46,13 +46,19 @@ class PracticeSection : AppCompatActivity() {
             val section = db.SectionDao().getSectionById(sectionId)
             remainingWords.addAll(allWords);
             bestScore = section.best_score ?: 0;
-            best_score.text = "Best Score: ${bestScore}";
-            generateNewCard()
+
+            runOnUiThread {
+                activity_title.text = "Practice ${section.name}"
+                best_score.text = "Best Score: ${bestScore}";
+                generateNewCard()
+            }
         }
         next.setOnClickListener {
             animateNextButton(false)
             animateNextCard()
         }
+
+        back_btn.setOnClickListener { finish() }
     }
 
     private fun generateNewCard() {
@@ -156,7 +162,7 @@ class PracticeSection : AppCompatActivity() {
             duration = animationDuration
             doOnEnd {
                 moveInAnimatorSet.start()
-                generateNewCard()
+                runOnUiThread { generateNewCard() }
             }
             start()
         }

@@ -13,16 +13,14 @@ import com.example.vocabbuddy.Models.Section
 import com.example.vocabbuddy.Models.Synonyms
 import com.example.vocabbuddy.Models.Word
 
-val MIGRATION_1_2 = object : Migration(2, 3) {
-    override fun migrate(database: SupportSQLiteDatabase) {
-//        database.execSQL("CREATE TABLE IF NOT EXISTS sections (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `best_score` INTEGER NOT NULL, `progress_status` INTEGER NOT NULL, PRIMARY KEY(`id`))")
-    }
+val MIGRATION_1_2 = object : Migration(1, 2) {
+    override fun migrate(database: SupportSQLiteDatabase) {}
 }
 
 
 @Database (
     entities = [Word::class, Section::class, Synonyms::class],
-    version = 3
+    version = 2
 )
 
 abstract class VocabDb : RoomDatabase() {
@@ -40,7 +38,6 @@ abstract class VocabDb : RoomDatabase() {
         private fun buildDatabase(context: Context) = Room.databaseBuilder(context,
             VocabDb::class.java, "vocabbuddy.db")
             .createFromAsset("vocabbuddy.db")
-//            .fallbackToDestructiveMigration()
             .addMigrations(MIGRATION_1_2)
             .build()
     }
