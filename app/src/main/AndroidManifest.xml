@@ -9,11 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/MyTheme">
-        <activity android:name=".Learn.LearnSectionList" />
-        <activity android:name=".Learn.LearnSection"/>
-        <activity android:name=".Practice.PracticeSection"/>
-        <activity android:name=".Practice.PracticeSectionList" />
-        <activity android:name=".MainActivity" >
+        <activity android:name=".Learn.LearnSectionList" android:screenOrientation="portrait"/>
+        <activity android:name=".Learn.LearnSection" android:screenOrientation="portrait"/>
+        <activity android:name=".Practice.PracticeSection" android:screenOrientation="portrait"/>
+        <activity android:name=".Practice.PracticeSectionList" android:screenOrientation="portrait"/>
+        <activity android:name=".MainActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
