@@ -2,7 +2,9 @@ package com.example.vocabbuddy.Learn
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
@@ -33,6 +35,7 @@ class LearnSection : AppCompatActivity() {
     private lateinit var questionWord: Word
     private var selectFromMaster: Boolean = false;
     private lateinit var tts: TextToSpeech;
+    private var onBoardingPhase = 0;
 
     private lateinit var vocabDb: VocabDb
 
@@ -52,50 +55,18 @@ class LearnSection : AppCompatActivity() {
             }
         })
 
+        val sharedPreferences = getSharedPreferences("GLOBAL_PREF", Context.MODE_PRIVATE);
+        val onBoardingCompleted =  sharedPreferences.getBoolean("ONBOARDING_COMPLETE", false);
+        if (!onBoardingCompleted) onBoardUser();
+
         remember_btn.setOnClickListener { wordRemembered() }
         not_remember_btn.setOnClickListener { wordNotRemembered() }
-
-        var dx = 0f
-        var dy = 0f;
-        var startX = 0f
-        var startY = 0f;
-        display_card.setOnTouchListener { v, event ->
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    startX = v.x
-                    startY = v.y
-                    dx = v.x - event.rawX;
-                    dy = v.y - event.rawY
-                }
-                MotionEvent.ACTION_MOVE -> {
-                    v.x = event.rawX + dx
-                    v.y = event.rawY + dy
-
-                    val diffX = v.x - startX
-                    var diffY = v.y - startY
-                    if (diffX > 0) diffY *= -1;
-                    v.rotation = (diffY) / 8
-                }
-                MotionEvent.ACTION_UP -> {
-                    val diffX = v.x - startX
-                    val diffY = v.y - startY
-
-                    if (!(abs(diffX) > 10 || abs(diffY) > 10)) {
-                        onCardClick()
-                        return@setOnTouchListener false
-                    }
-
-                    if (diffY < -200) {
-                        if (diffX > 0) wordRemembered()
-                        else wordNotRemembered()
-                    } else {
-                        v.animate().x(startX).y(startY).rotation(0f)
-                    }
-                }
-                else -> { return@setOnTouchListener false }
-            }
-            return@setOnTouchListener true
+        help_btn.setOnClickListener {
+            onBoardingPhase = 0;
+            onBoardUser()
         }
+        setTouchListener()
+
     }
 
     override fun onBackPressed() {
@@ -234,11 +205,14 @@ class LearnSection : AppCompatActivity() {
         show_def_text.visibility = View.GONE
         button_container.visibility = View.VISIBLE
         button_container.animate().translationY(0f)
+        onBoardUser()
     }
 
     fun openOverlay(v: View) {
         overlay.visibility = View.VISIBLE
-        overlay.animate().scaleX(1f).scaleY(1f)
+        overlay.animate().scaleX(1f).scaleY(1f).withEndAction {
+            onBoardUser()
+        }
     }
 
     fun closeOverlay(v: View) {
@@ -252,6 +226,7 @@ class LearnSection : AppCompatActivity() {
     }
 
     fun wordRemembered() {
+        onBoardUser()
         val status = questionWord.learning_status ?: 0
         val newStatus = if ((status + 1) > 3) 3 else (status + 1)
         GlobalScope.launch {
@@ -261,6 +236,7 @@ class LearnSection : AppCompatActivity() {
     }
 
     fun wordNotRemembered() {
+        onBoardUser()
         val status = questionWord.learning_status ?: 0
         val newStatus = if ((status - 1) < 0) 0 else (status - 1)
         GlobalScope.launch {
@@ -314,6 +290,62 @@ class LearnSection : AppCompatActivity() {
         learn_count.text = "${learningWords.size} out of ${allWords.size}"
         learn_progress_bar.max = allWords.size
         learn_progress_bar.progress = (learningWords.size)
+    }
+
+    private fun onBoardUser() {
+        val onboardingTexts = listOf("Tap the card to reveal the word's meaning", "Tap the fullscreen icon to show more information about the word", "Swipe left if you didn't know the meaning of the word \nSwipe right if you know the meaning of the word")
+        if (onBoardingPhase > 2) {
+            onboarding_text.text = "";
+            val sharedPreferences = getSharedPreferences("GLOBAL_PREF", Context.MODE_PRIVATE)
+            sharedPreferences.edit().putBoolean("ONBOARDING_COMPLETE", true).apply()
+            return
+        }
+        onboarding_text.text = onboardingTexts[onBoardingPhase]
+        ++onBoardingPhase;
+    }
+
+    private fun setTouchListener() {
+        var dx = 0f
+        var dy = 0f;
+        var startX = 0f
+        var startY = 0f;
+        display_card.setOnTouchListener { v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    startX = v.x
+                    startY = v.y
+                    dx = v.x - event.rawX;
+                    dy = v.y - event.rawY
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    v.x = event.rawX + dx
+                    v.y = event.rawY + dy
+
+                    val diffX = v.x - startX
+                    var diffY = v.y - startY
+                    if (diffX > 0) diffY *= -1;
+                    v.rotation = (diffY) / 8
+                }
+                MotionEvent.ACTION_UP -> {
+                    val diffX = v.x - startX
+                    val diffY = v.y - startY
+
+                    if (!(abs(diffX) > 10 || abs(diffY) > 10)) {
+                        onCardClick()
+                        return@setOnTouchListener false
+                    }
+
+                    if (diffY < -200) {
+                        if (diffX > 0) wordRemembered()
+                        else wordNotRemembered()
+                    } else {
+                        v.animate().x(startX).y(startY).rotation(0f)
+                    }
+                }
+                else -> { return@setOnTouchListener false }
+            }
+            return@setOnTouchListener true
+        }
     }
 
     private fun setSectionStatus(status: Int) {
