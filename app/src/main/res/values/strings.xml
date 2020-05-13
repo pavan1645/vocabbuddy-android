@@ -2,4 +2,5 @@
     <string name="app_name">Vocabbuddy</string>
     <string name="take_a_quiz"><u>Take a Quiz</u></string>
     <string name="retake_quiz"><u>Retake Quiz</u></string>
+    <string name="show_definition"><u>Show Definition</u></string>
 </resources>

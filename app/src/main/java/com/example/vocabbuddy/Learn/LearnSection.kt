@@ -98,6 +98,11 @@ class LearnSection : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        if (overlay.visibility == View.VISIBLE) closeOverlay(close_overlay_btn)
+        else super.onBackPressed()
+    }
+
     private fun getWords(sectionId: Int) {
         GlobalScope.launch {
             allWords = vocabDb.WordDao().getAllWords(sectionId)
@@ -237,10 +242,8 @@ class LearnSection : AppCompatActivity() {
     }
 
     fun closeOverlay(v: View) {
-        overlay.apply {
-            visibility = View.GONE
-            scaleX = 0f
-            scaleY = 0f
+        overlay.animate().scaleX(0f).scaleY(0f).withEndAction {
+            overlay.visibility = View.GONE
         }
     }
 

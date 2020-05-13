@@ -21,7 +21,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="3"
-            android:text="Mastered" />
+            android:text="Mastered"
+            android:textColor="@color/White" />
 
         <RelativeLayout
             android:layout_width="0dp"
@@ -34,8 +35,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/border"
-                android:progressBackgroundTint="@color/SecondaryBg"
-                android:progressTint="@color/SuccessBg"
+                android:progress="0"
+                android:progressBackgroundTint="@color/White"
+                android:progressTint="@color/Primary"
                 android:scaleY="6" />
 
             <TextView
@@ -63,7 +65,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="3"
-            android:text="Reviewing" />
+            android:text="Reviewing"
+            android:textColor="@color/White" />
 
         <RelativeLayout
             android:layout_width="0dp"
@@ -77,8 +80,8 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/border"
                 android:progress="0"
-                android:progressBackgroundTint="@color/SecondaryBg"
-                android:progressTint="@color/WarningBg"
+                android:progressBackgroundTint="@color/White"
+                android:progressTint="@color/Warning"
                 android:scaleY="6" />
 
             <TextView
@@ -106,7 +109,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="3"
-            android:text="Learning" />
+            android:text="Learning"
+            android:textColor="@color/White" />
 
         <RelativeLayout
             android:layout_width="0dp"
@@ -119,8 +123,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/border"
-                android:progressBackgroundTint="@color/SecondaryBg"
-                android:progressTint="@color/InfoBg"
+                android:progress="0"
+                android:progressBackgroundTint="@color/White"
+                android:progressTint="@color/Danger"
                 android:scaleY="6" />
 
             <TextView
@@ -216,11 +221,12 @@
                 android:id="@+id/show_def_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:layout_weight="5"
                 android:gravity="center_horizontal|top"
-                android:text="Show Definition"
-                android:textColor="@color/LightText"
-                android:textSize="10sp"
+                android:text="@string/show_definition"
+                android:textColor="@color/Primary"
+                android:textSize="12sp"
                 android:visibility="visible" />
 
             <TextView
