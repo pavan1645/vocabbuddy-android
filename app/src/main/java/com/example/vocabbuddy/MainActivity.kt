@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
     private fun getViewAnimation(pivotX: Float): Animation {
         val anim = ScaleAnimation(0f, 1f,1f, 1f, Animation.RELATIVE_TO_SELF, pivotX, Animation.RELATIVE_TO_SELF, 1f)
         anim.fillAfter = true
-        anim.duration = 1000
+        anim.duration = 300
         return anim
     }
 }

@@ -2,6 +2,7 @@ package com.example.vocabbuddy.Learn
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
@@ -10,7 +11,9 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.LinearLayout
 import androidx.core.animation.doOnEnd
+import com.example.vocabbuddy.Models.Section
 import com.example.vocabbuddy.Models.Word
+import com.example.vocabbuddy.Practice.PracticeSection
 import com.example.vocabbuddy.R
 import com.example.vocabbuddy.VocabDb
 import kotlinx.android.synthetic.main.activity_learn_section.*
@@ -26,7 +29,7 @@ class LearnSection : AppCompatActivity() {
     private val reviewingWords: MutableList<Word> = ArrayList()
     private val masteredWords: MutableList<Word> = ArrayList()
     private lateinit var allWords: List<Word>
-    private var sectionId: Int = 0
+    private lateinit var section: Section
     private lateinit var questionWord: Word
     private var selectFromMaster: Boolean = false;
     private lateinit var tts: TextToSpeech;
@@ -39,8 +42,8 @@ class LearnSection : AppCompatActivity() {
         window.statusBarColor = resources.getColor(R.color.SuccessText, null);
 
         vocabDb = VocabDb(this)
-        sectionId = intent.extras?.getInt("id") ?: 0
-        getWords()
+        val sectionId = intent.extras?.getInt("id") ?: 0
+        getWords(sectionId)
 
         tts = TextToSpeech(applicationContext, TextToSpeech.OnInitListener { status ->
             if (status != TextToSpeech.ERROR) {
@@ -95,9 +98,10 @@ class LearnSection : AppCompatActivity() {
         }
     }
 
-    private fun getWords() {
+    private fun getWords(sectionId: Int) {
         GlobalScope.launch {
             allWords = vocabDb.WordDao().getAllWords(sectionId)
+            section = vocabDb.SectionDao().getSectionById(sectionId)
 
 
             learningWords.clear()
@@ -119,7 +123,13 @@ class LearnSection : AppCompatActivity() {
     }
 
     private fun generateWordCard() {
-        if (learningWords.size + reviewingWords.size == 0) return;
+        if (learningWords.size + reviewingWords.size == 0) {
+            display_card.visibility = View.GONE
+            quiz_card.visibility = View.VISIBLE;
+            quiz_card.animate().alpha(1f);
+            if (section.progress_status != 2) setSectionStatus(2);
+            return
+        }
 
         if (learningWords.size + reviewingWords.size == 1) {
             selectFromMaster = !selectFromMaster;
@@ -256,7 +266,14 @@ class LearnSection : AppCompatActivity() {
         }
     }
 
+    fun openPracticeSection(v: View) {
+        val intent = Intent(this, PracticeSection::class.java)
+        intent.apply { putExtra("id", section.id ?: 0) }
+        startActivity(intent)
+    }
+
     private fun swipeCard(direction: String) {
+        if (section.progress_status != 1) setSectionStatus(1);
         runOnUiThread {
             val yLen = -resources.displayMetrics.heightPixels.toFloat();
             var xLen = resources.displayMetrics.widthPixels.toFloat();
@@ -276,7 +293,7 @@ class LearnSection : AppCompatActivity() {
             animatorSet.apply {
                 play(yAnimation).with(xAnimation).with(rotateAnimation).with(alphaAnimation);
                 duration = 500
-                doOnEnd { getWords() }
+                doOnEnd { getWords(section.id ?: 0) }
                 start()
             }
         }
@@ -294,5 +311,9 @@ class LearnSection : AppCompatActivity() {
         learn_count.text = "${learningWords.size} out of ${allWords.size}"
         learn_progress_bar.max = allWords.size
         learn_progress_bar.progress = (learningWords.size)
+    }
+
+    private fun setSectionStatus(status: Int) {
+        GlobalScope.launch { vocabDb.SectionDao().setSectionProgess(section.id ?: 0, status) }
     }
 }

@@ -25,6 +25,11 @@ class LearnSectionList : AppCompatActivity() {
         window.statusBarColor = resources.getColor(R.color.SuccessText, null);
     }
 
+    override fun onResume() {
+        super.onResume()
+        loadWords()
+    }
+
     private fun loadWords() {
         val vocabDb = VocabDb(this)
         val context = this;

@@ -57,6 +57,12 @@ class PracticeSection : AppCompatActivity() {
 
     private fun generateNewCard() {
         if (remainingWords.size == 0) {
+            card_wrapper.visibility = View.GONE;
+            next.visibility = View.GONE;
+            question_no.visibility = View.GONE
+            retake_quiz.visibility = View.VISIBLE
+            final_score.visibility = View.VISIBLE
+            final_score.text = "Final Score\n${currScore} / ${allWords.size}"
             return
         }
 
@@ -117,6 +123,11 @@ class PracticeSection : AppCompatActivity() {
         toogleRadioGroup(false, false)
         animateNextButton(true)
     }
+
+    fun restartActivity(v: View) {
+        recreate()
+    }
+
 
     private fun animateNextCard() {
         var xLen = resources.displayMetrics.widthPixels.toFloat() * -1;
