@@ -15,7 +15,7 @@
         android:padding="16dp"
         android:textAlignment="center"
         android:textColor="@color/White"
-        android:textSize="14sp"
+        android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/display_card"
         app:layout_constraintEnd_toStartOf="@+id/guideline7"
         app:layout_constraintStart_toStartOf="@+id/guideline6" />

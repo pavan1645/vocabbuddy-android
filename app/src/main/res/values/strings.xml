@@ -9,6 +9,7 @@
     <string name="locked">%1$s Locked</string>
     <string name="by20">%1$d/20</string>
     <string name="learn">Learn %1$s</string>
+    <string name="learn_underlined"><u>Learn %1$s</u></string>
     <string name="learn_only">Learn</string>
     <string name="global_pref">GLOBAL_PREF</string>
     <string name="onboarding_complete">ONBOARDING_COMPLETE</string>

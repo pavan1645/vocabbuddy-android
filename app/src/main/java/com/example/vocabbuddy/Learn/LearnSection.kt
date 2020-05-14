@@ -10,6 +10,7 @@ import android.speech.tts.TextToSpeech
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.AlphaAnimation
+import android.view.animation.AnticipateInterpolator
 import android.widget.LinearLayout
 import androidx.core.animation.doOnEnd
 import com.example.vocabbuddy.Models.Section
@@ -273,11 +274,8 @@ class LearnSection : AppCompatActivity() {
             var rotateDegree = 90f;
             if (direction == "left") rotateDegree *= -1;
 
-            val xStart = display_card.x - display_card.width/2
-            val yStart = display_card.y - display_card.height/2
-
-            val xAnimation = ObjectAnimator.ofFloat(display_card, View.TRANSLATION_X, xStart, xLen)
-            val yAnimation = ObjectAnimator.ofFloat(display_card, View.TRANSLATION_Y, yStart, yLen)
+            val xAnimation = ObjectAnimator.ofFloat(display_card, View.TRANSLATION_X, display_card.translationX, xLen)
+            val yAnimation = ObjectAnimator.ofFloat(display_card, View.TRANSLATION_Y, display_card.translationY, yLen)
             val rotateAnimation = ObjectAnimator.ofFloat(display_card, View.ROTATION, display_card.rotation, rotateDegree)
             val alphaAnimation = ObjectAnimator.ofFloat(display_card, View.ALPHA, 1f, 0f)
 
@@ -319,7 +317,7 @@ class LearnSection : AppCompatActivity() {
     }
 
     private fun animateOnboardingText() {
-        val fadeInOutAnimation = AlphaAnimation(0.75f, 1f);
+        val fadeInOutAnimation = AlphaAnimation(0f, 1f);
         fadeInOutAnimation.duration = 750;
         fadeInOutAnimation.repeatMode = 2;
         fadeInOutAnimation.repeatCount = AlphaAnimation.INFINITE;

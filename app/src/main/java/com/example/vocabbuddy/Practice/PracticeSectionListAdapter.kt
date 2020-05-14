@@ -34,7 +34,7 @@ class PracticeSectionListAdapter(private val sections: List<Section>, private va
         holder.itemView.section_name.text = section.name;
         holder.itemView.section_locked.text = context.getString(R.string.locked, section.name);
         holder.itemView.best_score.text = context.getString(R.string.by20, section.best_score)
-        holder.itemView.section_learn.text = context.getString(R.string.learn, section.name)
+        holder.itemView.section_learn.text = context.getString(R.string.learn_underlined, section.name)
         holder.itemView.custom_overlay.visibility = View.VISIBLE;
 
         if (section.progress_status == 2) {
