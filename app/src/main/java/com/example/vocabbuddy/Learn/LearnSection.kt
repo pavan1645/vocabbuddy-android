@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.view.MotionEvent
 import android.view.View
+import android.view.animation.AlphaAnimation
 import android.widget.LinearLayout
 import androidx.core.animation.doOnEnd
 import com.example.vocabbuddy.Models.Section
@@ -57,6 +58,7 @@ class LearnSection : AppCompatActivity() {
         /* Start Onboarding */
         val sharedPreferences = getSharedPreferences(getString(R.string.global_pref), Context.MODE_PRIVATE);
         val onBoardingCompleted =  sharedPreferences.getBoolean(getString(R.string.onboarding_complete), false);
+        animateOnboardingText()
         if (!onBoardingCompleted) onBoardUser();
 
         /* Set Explicit Click Listeners */
@@ -314,6 +316,14 @@ class LearnSection : AppCompatActivity() {
         }
         onboarding_text.text = onboardingTexts[onBoardingPhase]
         ++onBoardingPhase;
+    }
+
+    private fun animateOnboardingText() {
+        val fadeInOutAnimation = AlphaAnimation(0.75f, 1f);
+        fadeInOutAnimation.duration = 750;
+        fadeInOutAnimation.repeatMode = 2;
+        fadeInOutAnimation.repeatCount = AlphaAnimation.INFINITE;
+        onboarding_text.startAnimation(fadeInOutAnimation)
     }
 
     private fun setTouchListener() {

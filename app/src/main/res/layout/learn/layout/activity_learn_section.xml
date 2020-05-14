@@ -177,6 +177,7 @@
         android:minHeight="200dp"
         android:padding="8dp"
         android:visibility="visible"
+        app:cardCornerRadius="10dp"
         app:cardElevation="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline7"
@@ -193,9 +194,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
+                android:layout_margin="4dp"
                 android:background="@color/White"
                 android:onClick="openOverlay"
-                android:padding="4dp"
+                android:paddingStart="4dp"
+                android:paddingBottom="4dp"
                 android:src="@drawable/ic_fullscreen_black_24dp"
                 android:visibility="visible" />
 
