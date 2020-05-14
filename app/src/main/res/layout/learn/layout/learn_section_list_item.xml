@@ -11,7 +11,7 @@
         android:id="@+id/section_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Section 1"
+        android:text=""
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -24,7 +24,7 @@
         android:paddingTop="2dp"
         android:paddingEnd="8dp"
         android:paddingBottom="2dp"
-        android:text="Not Started"
+        android:text=""
         android:textAlignment="center"
         android:textColor="@color/LightText"
         android:textSize="12sp"

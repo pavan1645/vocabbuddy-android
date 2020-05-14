@@ -28,20 +28,21 @@ class LearnSectionListAdapter(private val sections: List<Section>, private val m
         val section = sections[position];
         holder.itemView.apply {
             section_name.text = section.name;
+            /* Styling section status */
             progress_status.apply {
                 when (section.progress_status) {
                     0 -> {
-                        this.text = "Not Started"
+                        this.text = mainContext.getString(R.string.not_started)
                         this.setBackgroundColor(resources.getColor(R.color.LightBg, null))
                         this.setTextColor(resources.getColor(R.color.LightText, null))
                     }
                     1 -> {
-                        this.text = "Started"
+                        this.text = mainContext.getString(R.string.started)
                         this.setBackgroundColor(resources.getColor(R.color.WarningBg, null))
                         this.setTextColor(resources.getColor(R.color.WarningText, null))
                     }
                     else -> {
-                        this.text = "Mastered"
+                        this.text = mainContext.getString(R.string.mastered)
                         this.setBackgroundColor(resources.getColor(R.color.SuccessBg, null))
                         this.setTextColor(resources.getColor(R.color.SuccessText, null))
                     }

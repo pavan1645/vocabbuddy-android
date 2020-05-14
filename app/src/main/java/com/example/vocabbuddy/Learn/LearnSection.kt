@@ -4,11 +4,9 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.LinearLayout
@@ -48,6 +46,7 @@ class LearnSection : AppCompatActivity() {
         val sectionId = intent.extras?.getInt("id") ?: 0
         getWords(sectionId)
 
+        /* Initialize TTS Engine */
         tts = TextToSpeech(applicationContext, TextToSpeech.OnInitListener { status ->
             if (status != TextToSpeech.ERROR) {
                 tts.language = Locale.US
@@ -55,20 +54,23 @@ class LearnSection : AppCompatActivity() {
             }
         })
 
-        val sharedPreferences = getSharedPreferences("GLOBAL_PREF", Context.MODE_PRIVATE);
-        val onBoardingCompleted =  sharedPreferences.getBoolean("ONBOARDING_COMPLETE", false);
+        /* Start Onboarding */
+        val sharedPreferences = getSharedPreferences(getString(R.string.global_pref), Context.MODE_PRIVATE);
+        val onBoardingCompleted =  sharedPreferences.getBoolean(getString(R.string.onboarding_complete), false);
         if (!onBoardingCompleted) onBoardUser();
 
+        /* Set Explicit Click Listeners */
         remember_btn.setOnClickListener { wordRemembered() }
         not_remember_btn.setOnClickListener { wordNotRemembered() }
         back_btn.setOnClickListener { finish() }
         help_btn.setOnClickListener {
             onBoardingPhase = 0;
-            sharedPreferences.edit().putBoolean("ONBOARDING_COMPLETE", false).apply()
+            sharedPreferences.edit().putBoolean(getString(R.string.onboarding_complete), false).apply()
             onBoardUser()
         }
-        setTouchListener()
 
+        /* Handle Touch Events */
+        setTouchListener()
     }
 
     override fun onBackPressed() {
@@ -95,12 +97,13 @@ class LearnSection : AppCompatActivity() {
             runOnUiThread {
                 setProgressBarValues()
                 generateWordCard()
-                activity_title.text = "Learn ${section.name}"
+                activity_title.text = getString(R.string.learn, section.name)
             }
         }
     }
 
     private fun generateWordCard() {
+        /* If all words are mastered */
         if (learningWords.size + reviewingWords.size == 0) {
             display_card.visibility = View.GONE
             quiz_card.visibility = View.VISIBLE;
@@ -109,26 +112,29 @@ class LearnSection : AppCompatActivity() {
             return
         }
 
+        /* If only 1 word is yet to be mastered, select every alternative word from mastered word list */
         if (learningWords.size + reviewingWords.size == 1) {
             selectFromMaster = !selectFromMaster;
             if (selectFromMaster) questionWord = masteredWords[Random.nextInt(0, masteredWords.size)]
         }
 
+        /* Select random word from learning and reviewing word list */
         if (learningWords.size + reviewingWords.size > 1 || !selectFromMaster) {
             val currWordIndex = Random.nextInt(0, learningWords.size + reviewingWords.size)
             if (currWordIndex < learningWords.size) questionWord = learningWords[currWordIndex]
             else questionWord = reviewingWords[currWordIndex - learningWords.size]
         }
 
+        /* Set card text values */
         word_text.text = questionWord.word
         definition.text = questionWord.definition
-        type_phonetic.text = "${questionWord.type} ● ${questionWord.phonetic}"
+        type_phonetic.text = getString(R.string.type_dot_phonetic, questionWord.type, questionWord.phonetic)
         definition.text = questionWord.definition
 
         /* Overlay layout's values */
         word_text_2.text = questionWord.word
         definition_2.text = questionWord.definition
-        type_phonetic_2.text = "${questionWord.type} ● ${questionWord.phonetic}"
+        type_phonetic_2.text = getString(R.string.type_dot_phonetic, questionWord.type, questionWord.phonetic)
         example_text.text = questionWord.example
         origin_text.text = questionWord.origin
 
@@ -140,6 +146,7 @@ class LearnSection : AppCompatActivity() {
         resetCard()
     }
 
+    /* Hide definitions and buttons with aniamtions */
     private fun resetCard() {
         full_screen_btn.visibility = View.GONE
         word_wrapper.apply {
@@ -183,7 +190,8 @@ class LearnSection : AppCompatActivity() {
         }
     }
 
-    fun onCardClick() {
+    /* Show definitions and buttons with animations */
+    private fun onCardClick() {
         full_screen_btn.visibility = View.VISIBLE
         word_wrapper.apply {
             this.layoutParams.apply {
@@ -227,7 +235,7 @@ class LearnSection : AppCompatActivity() {
         tts.speak(questionWord.word, TextToSpeech.QUEUE_FLUSH, null, "")
     }
 
-    fun wordRemembered() {
+    private fun wordRemembered() {
         onBoardUser()
         val status = questionWord.learning_status ?: 0
         val newStatus = if ((status + 1) > 3) 3 else (status + 1)
@@ -237,7 +245,7 @@ class LearnSection : AppCompatActivity() {
         }
     }
 
-    fun wordNotRemembered() {
+    private fun wordNotRemembered() {
         onBoardUser()
         val status = questionWord.learning_status ?: 0
         val newStatus = if ((status - 1) < 0) 0 else (status - 1)
@@ -253,6 +261,7 @@ class LearnSection : AppCompatActivity() {
         startActivity(intent)
     }
 
+    /* Card swiping animation */
     private fun swipeCard(direction: String) {
         if (section.progress_status != 1) setSectionStatus(1);
         runOnUiThread {
@@ -281,26 +290,26 @@ class LearnSection : AppCompatActivity() {
     }
 
     private fun setProgressBarValues() {
-        master_count.text = "${masteredWords.size} out of ${allWords.size}"
+        master_count.text = getString(R.string.out_of, masteredWords.size, allWords.size)
         master_progress_bar.max = allWords.size
         master_progress_bar.progress = (masteredWords.size)
 
-        review_count.text = "${reviewingWords.size} out of ${allWords.size}"
+        review_count.text = getString(R.string.out_of, reviewingWords.size, allWords.size)
         review_progress_bar.max = allWords.size
         review_progress_bar.progress = (reviewingWords.size)
 
-        learn_count.text = "${learningWords.size} out of ${allWords.size}"
+        learn_count.text =  getString(R.string.out_of, learningWords.size, allWords.size)
         learn_progress_bar.max = allWords.size
         learn_progress_bar.progress = (learningWords.size)
     }
 
     private fun onBoardUser() {
-        val onboardingTexts = listOf("Tap the card to reveal the word's meaning", "Tap the fullscreen icon to show more information about the word", "Swipe left if you didn't know the meaning of the word \nSwipe right if you know the meaning of the word")
-        val sharedPreferences = getSharedPreferences("GLOBAL_PREF", Context.MODE_PRIVATE)
+        val onboardingTexts = listOf(getString(R.string.onboarding_1), getString(R.string.onboarding_2), getString(R.string.onboarding_3))
+        val sharedPreferences = getSharedPreferences(getString(R.string.global_pref), Context.MODE_PRIVATE)
 
-        if (onBoardingPhase > 2 || sharedPreferences.getBoolean("ONBOARDING_COMPLETE", false)) {
+        if (onBoardingPhase > 2 || sharedPreferences.getBoolean(getString(R.string.onboarding_complete), false)) {
             onboarding_text.text = "";
-            sharedPreferences.edit().putBoolean("ONBOARDING_COMPLETE", true).apply()
+            sharedPreferences.edit().putBoolean(getString(R.string.onboarding_complete), true).apply()
             return
         }
         onboarding_text.text = onboardingTexts[onBoardingPhase]
@@ -312,6 +321,7 @@ class LearnSection : AppCompatActivity() {
         var dy = 0f;
         var startX = 0f
         var startY = 0f;
+        val CLICK_THRESHOLD = 10;
         display_card.setOnTouchListener { v, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
@@ -321,23 +331,26 @@ class LearnSection : AppCompatActivity() {
                     dy = v.y - event.rawY
                 }
                 MotionEvent.ACTION_MOVE -> {
-                    v.x = event.rawX + dx
-                    v.y = event.rawY + dy
-
                     val diffX = v.x - startX
                     var diffY = v.y - startY
                     if (diffX > 0) diffY *= -1;
+
+                    /* Move and rotate card with touch move */
                     v.rotation = (diffY) / 8
+                    v.x = event.rawX + dx
+                    v.y = event.rawY + dy
                 }
                 MotionEvent.ACTION_UP -> {
                     val diffX = v.x - startX
                     val diffY = v.y - startY
 
-                    if (!(abs(diffX) > 10 || abs(diffY) > 10)) {
+                    /* If move distance is less than CLICK_THRESHOLD consider it as a click */
+                    if (!(abs(diffX) > CLICK_THRESHOLD || abs(diffY) > CLICK_THRESHOLD)) {
                         onCardClick()
                         return@setOnTouchListener false
                     }
 
+                    /* If Y diff is upwards swipe card else reset it back to its original position */
                     if (diffY < -200) {
                         if (diffX > 0) wordRemembered()
                         else wordNotRemembered()

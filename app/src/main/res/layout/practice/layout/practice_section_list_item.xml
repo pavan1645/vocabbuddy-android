@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
         android:paddingEnd="16dp"
-        android:text="Best Score"
+        android:text="@string/best_score_only"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:paddingBottom="8dp"
         android:paddingEnd="16dp"
-        android:text="0/20"
+        android:text=""
         app:layout_constraintEnd_toEndOf="@id/best_score_title"
         app:layout_constraintStart_toStartOf="@id/best_score_title"
         app:layout_constraintTop_toBottomOf="@id/best_score_title" />
@@ -55,7 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Section Locked"
+            android:text="@string/section_locked"
             android:textColor="@color/Accent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -63,12 +63,12 @@
 
         <Button
             android:id="@+id/section_learn"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="24dp"
             android:layout_marginBottom="8dp"
             android:background="@android:color/transparent"
-            style="?android:attr/borderlessButtonStyle"
-            android:text="Learn"
+            android:text="@string/learn_only"
             android:textAllCaps="false"
             android:textColor="@color/PrimaryText"
             app:layout_constraintBottom_toBottomOf="parent"

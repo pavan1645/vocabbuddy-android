@@ -34,6 +34,7 @@ class LearnSectionList : AppCompatActivity() {
         val vocabDb = VocabDb(this)
         val context = this;
 
+        /* Get sections and add to adapter */
         GlobalScope.launch {
             val sections = vocabDb.SectionDao().getAllSections()
             val viewAdapter = LearnSectionListAdapter(sections, context)

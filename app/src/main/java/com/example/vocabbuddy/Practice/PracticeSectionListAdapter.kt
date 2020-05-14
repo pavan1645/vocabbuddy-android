@@ -32,9 +32,9 @@ class PracticeSectionListAdapter(private val sections: List<Section>, private va
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val section = sections[position];
         holder.itemView.section_name.text = section.name;
-        holder.itemView.section_locked.text = "${section.name} Locked";
-        holder.itemView.best_score.text = "${section.best_score}/20"
-        holder.itemView.section_learn.text = "Learn ${section.name}"
+        holder.itemView.section_locked.text = context.getString(R.string.locked, section.name);
+        holder.itemView.best_score.text = context.getString(R.string.by20, section.best_score)
+        holder.itemView.section_learn.text = context.getString(R.string.learn, section.name)
         holder.itemView.custom_overlay.visibility = View.VISIBLE;
 
         if (section.progress_status == 2) {

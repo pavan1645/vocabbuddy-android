@@ -26,6 +26,7 @@ class PracticeSectionList : AppCompatActivity() {
         loadWords()
     }
 
+    /* Get sections and add to adapter */
     private fun loadWords() {
         val db = VocabDb(this)
         val context = this;

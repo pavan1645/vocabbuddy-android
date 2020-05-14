@@ -48,8 +48,9 @@ class PracticeSection : AppCompatActivity() {
             bestScore = section.best_score ?: 0;
 
             runOnUiThread {
-                activity_title.text = "Practice ${section.name}"
-                best_score.text = "Best Score: ${bestScore}";
+                activity_title.text = getString(R.string.practice, section.name)
+                best_score.text = getString(R.string.best_score, bestScore);
+                current_score.text = getString(R.string.curr_score, currScore)
                 generateNewCard()
             }
         }
@@ -62,21 +63,24 @@ class PracticeSection : AppCompatActivity() {
     }
 
     private fun generateNewCard() {
+        /* If all questions are answered show final score */
         if (remainingWords.size == 0) {
             card_wrapper.visibility = View.GONE;
             next.visibility = View.GONE;
             question_no.visibility = View.GONE
             retake_quiz.visibility = View.VISIBLE
             final_score.visibility = View.VISIBLE
-            final_score.text = "Final Score\n${currScore} / ${allWords.size}"
+            final_score.text = getString(R.string.final_score, currScore, allWords.size)
             return
         }
 
+        /* Select random word and set its answer to random index */
         val questionWord: Word = remainingWords[Random.nextInt(0, remainingWords.size)];
         answerIndex = Random.nextInt(0, 4);
 
-        question_no.text = "Question ${allWords.size - remainingWords.size + 1} / ${allWords.size}"
+        question_no.text = getString(R.string.question_no, (allWords.size - remainingWords.size + 1), allWords.size)
 
+        /* Select random words for other options */
         val answers: MutableList<String> = MutableList(4) {""};
         for (i in 0..3) {
             if (i == answerIndex) {
@@ -85,7 +89,7 @@ class PracticeSection : AppCompatActivity() {
             }
 
             var ansWord = allWords[Random.nextInt(0, allWords.size)]
-            while (ansWord.id == questionWord.id) ansWord = allWords[Random.nextInt(0, allWords.size)]
+            while (ansWord.id == questionWord.id) ansWord = allWords[Random.nextInt(0, allWords.size)]      // If random word is same as question, generate new word
 
             answers[i] = ansWord.definition.orEmpty()
         }
@@ -108,16 +112,17 @@ class PracticeSection : AppCompatActivity() {
 
         v as RadioButton;
 
+        /* Check option selected by user and show correct answer */
         if (v.tag.toString().equals(answerIndex.toString())) {
             v.setBackgroundColor(successBg)
             v.buttonTintList = ColorStateList.valueOf(successBg)
             currScore++;
-            current_score.text = "Current Score: ${currScore}"
+            current_score.text = getString(R.string.curr_score, currScore)
 
             if (currScore > bestScore) {
                 GlobalScope.launch { db.SectionDao().setSectionScore(sectionId, currScore) }
                 bestScore = currScore;
-                best_score.text = "Best Score: ${bestScore}";
+                best_score.text = getString(R.string.best_score, bestScore);
             }
 
         } else {
@@ -134,7 +139,7 @@ class PracticeSection : AppCompatActivity() {
         recreate()
     }
 
-
+    /* Next card animation */
     private fun animateNextCard() {
         var xLen = resources.displayMetrics.widthPixels.toFloat() * -1;
         val currX = card_wrapper.translationX;
@@ -169,6 +174,7 @@ class PracticeSection : AppCompatActivity() {
 
     }
 
+    /* Show / Hide next button with animation */
     private fun animateNextButton(show: Boolean) {
         val start = if (show) 0f else 1f;
         val end = if (show) 1f else 0f;
@@ -180,6 +186,7 @@ class PracticeSection : AppCompatActivity() {
         next.startAnimation(scaleAnimation);
     }
 
+    /* Enable / Disable radio button clicks */
     private fun toogleRadioGroup(isClickable: Boolean, reset: Boolean) {
         for (i in 0..answerRadioGroup.childCount) {
             val radioButton = answerRadioGroup.getChildAt(i);
