@@ -115,7 +115,6 @@ class PracticeSection : AppCompatActivity() {
         /* Check option selected by user and show correct answer */
         if (v.tag.toString().equals(answerIndex.toString())) {
             v.setBackgroundColor(successBg)
-            v.buttonTintList = ColorStateList.valueOf(successBg)
             currScore++;
             current_score.text = getString(R.string.curr_score, currScore)
 
@@ -129,7 +128,6 @@ class PracticeSection : AppCompatActivity() {
             val correctOptionRadio = answerRadioGroup.getChildAt(answerIndex) as RadioButton
             correctOptionRadio.setBackgroundColor(successBg)
             v.setBackgroundColor(dangerBg)
-            v.buttonTintList = ColorStateList.valueOf(dangerBg)
         }
         toogleRadioGroup(false, false)
         animateNextButton(true)
@@ -195,7 +193,6 @@ class PracticeSection : AppCompatActivity() {
             radioButton.isClickable = isClickable;
             if (reset) {
                 radioButton.setBackgroundColor(resources.getColor(R.color.White, null))
-                radioButton.buttonTintList = ColorStateList.valueOf(resources.getColor(R.color.SecondaryBg, null))
             }
         }
     }

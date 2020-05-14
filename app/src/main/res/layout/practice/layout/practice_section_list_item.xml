@@ -61,16 +61,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
+        <TextView
             android:id="@+id/section_learn"
-            style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
-            android:layout_height="24dp"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:background="@android:color/transparent"
-            android:text="@string/learn_only"
-            android:textAllCaps="false"
-            android:textColor="@color/PrimaryText"
+            android:textColor="@color/Primary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
